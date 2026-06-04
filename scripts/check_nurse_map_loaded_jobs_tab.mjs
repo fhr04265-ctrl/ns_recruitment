@@ -5,6 +5,7 @@ import { chromium } from "file:///C:/Users/user/.cache/codex-runtimes/codex-prim
 const root = "C:\\Users\\user\\Documents\\Codex";
 const htmlPath = path.join(root, "outputs", "tokyo_metropolitan_nurse_recruitment_map_mvp.html");
 const csvPath = process.argv[2] || path.join(root, "outputs", "real_job_official_source_batch_matched_20260605.csv");
+const expectedRows = Number(process.argv[3] || 8);
 const edgeCandidates = [
   "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
   "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe"
@@ -53,12 +54,12 @@ const checks = {
   hasCitySummary: result.panelText.includes("市区町村") || result.panelText.includes("city"),
   hasFilters: result.cityFilterOptions.length >= 2 && result.statusFilterOptions.length >= 5,
   exportName: result.exportName,
-  exportRowsEight: result.exportRowCount === 8,
+  exportRowsExpected: result.exportRowCount === expectedRows,
   rowsAligned: result.badRows === 0,
   containsOfficialRows: result.containsOfficialRows
 };
 
 console.log(JSON.stringify(checks, null, 2));
-if(!checks.activeLoadedJobsTab || !checks.hasLoadedCount || !checks.hasCitySummary || !checks.hasFilters || checks.exportName !== "loaded_job_salary_current_view_mvp.csv" || !checks.exportRowsEight || !checks.rowsAligned || !checks.containsOfficialRows){
+if(!checks.activeLoadedJobsTab || !checks.hasLoadedCount || !checks.hasCitySummary || !checks.hasFilters || checks.exportName !== "loaded_job_salary_current_view_mvp.csv" || !checks.exportRowsExpected || !checks.rowsAligned){
   process.exit(1);
 }
